@@ -6,10 +6,6 @@
 #include "sdkconfig.h"
 #if CONFIG_IDF_TARGET_ESP32S3 && (CONFIG_USE_WAKENET || CONFIG_USE_MULTINET)
 
-#if !defined(ARDUINO_PARTITION_esp_sr_32) && !defined(ARDUINO_PARTITION_esp_sr_16) && !defined(ARDUINO_PARTITION_esp_sr_8)
-#warning Compatible partition must be selected for ESP_SR to work
-#endif
-
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -43,11 +43,19 @@ __attribute__((weak)) bool shouldPrintChipDebugReport(void) {
     return false;
 }
 
+__attribute__((weak)) void setup(void) {
+
+}
+__attribute__((weak)) void loop(void) {
+	delay(1000);
+}
+
 void loopTask(void *pvParameters)
 {
 #if !defined(NO_GLOBAL_INSTANCES) && !defined(NO_GLOBAL_SERIAL)
     // sets UART0 (default console) RX/TX pins as already configured in boot or as defined in variants/pins_arduino.h
     Serial0.setPins(gpioNumberToDigitalPin(SOC_RX0), gpioNumberToDigitalPin(SOC_TX0));
+	log_printf("Serial0.setPins()!\n");
 #endif
 #if ARDUHAL_LOG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG
     printBeforeSetupInfo();
@@ -71,12 +79,17 @@ void loopTask(void *pvParameters)
         if(loopTaskWDTEnabled){
             esp_task_wdt_reset();
         }
+		uint64_t lastYield = millis();
         loop();
+		uint64_t now = millis();
+		if((now - lastYield) < 1) {
+			vTaskDelay(5); //delay 1 RTOS tick
+		}
         if (serialEventRun) serialEventRun();
     }
 }
 
-extern "C" void app_main()
+extern "C" void arduino_startup()
 {
 #if ARDUINO_USB_CDC_ON_BOOT && !ARDUINO_USB_MODE
     Serial.begin();

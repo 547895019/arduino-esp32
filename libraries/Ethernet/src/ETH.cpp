@@ -437,6 +437,7 @@ bool ETHClass::beginSPI(eth_phy_type_t type, int32_t phy_addr, int cs, int irq, 
         return false;
     }
 
+#if CONFIG_ETH_SPI_ETHERNET_W5500 || CONFIG_ETH_SPI_ETHERNET_DM9051 || CONFIG_ETH_SPI_ETHERNET_KSZ8851SNL
     // Init common MAC and PHY configs to default
     eth_mac_config_t eth_mac_config = ETH_MAC_DEFAULT_CONFIG();
     eth_phy_config_t phy_config = ETH_PHY_DEFAULT_CONFIG();
@@ -444,7 +445,7 @@ bool ETHClass::beginSPI(eth_phy_type_t type, int32_t phy_addr, int cs, int irq, 
     // Update PHY config based on board specific configuration
     phy_config.phy_addr = phy_addr;
     phy_config.reset_gpio_num = _pin_rst;
-
+#endif
     // Configure SPI interface for specific SPI module
     spi_device_interface_config_t spi_devcfg;
     memset(&spi_devcfg, 0, sizeof(spi_device_interface_config_t));

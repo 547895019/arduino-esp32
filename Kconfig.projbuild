@@ -20,7 +20,7 @@ config ENABLE_ARDUINO_DEPENDS
 
 config AUTOSTART_ARDUINO
     bool "Autostart Arduino setup and loop on boot"
-    default "n"
+    default "y"
     help
         Enabling this option will implement app_main and start Arduino.
         All you need to implement in your main.cpp is setup() and loop()

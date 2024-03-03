@@ -11,36 +11,6 @@ targets:
   - esp32h2
 tags:
   - arduino
-files:
-  include:
-    - "variants/esp32/**/*"
-    - "variants/esp32s2/**/*"
-    - "variants/esp32s3/**/*"
-    - "variants/esp32c2/**/*"
-    - "variants/esp32c3/**/*"
-    - "variants/esp32c6/**/*"
-    - "variants/esp32h2/**/*"
-  exclude:
-    - "docs/"
-    - "docs/**/*"
-    - "idf_component_examples/"
-    - "idf_component_examples/**/*"
-    - "package/"
-    - "package/**/*"
-    - "tests/"
-    - "tests/**/*"
-    - "tools/"
-    - "tools/**/*"
-    - "variants/**/*"
-    - ".gitignore"
-    - ".gitmodules"
-    - ".readthedocs.yaml"
-    - "boards.txt"
-    - "CODE_OF_CONDUCT.md"
-    - "LICENSE.md"
-    - "package.json"
-    - "platform.txt"
-    - "programmers.txt"
 dependencies:
   idf: ">=5.1"
   # mdns 1.2.1 is necessary to build H2 with no WiFi

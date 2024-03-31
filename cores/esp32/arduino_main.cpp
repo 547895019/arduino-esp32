@@ -48,7 +48,6 @@ void loopTask(void *pvParameters)
 #if !defined(NO_GLOBAL_INSTANCES) && !defined(NO_GLOBAL_SERIAL)
     // sets UART0 (default console) RX/TX pins as already configured in boot or as defined in variants/pins_arduino.h
     Serial0.setPins(gpioNumberToDigitalPin(SOC_RX0), gpioNumberToDigitalPin(SOC_TX0));
-	log_printf("Serial0.setPins()!\n");
 #endif
 #if ARDUHAL_LOG_LEVEL >= ARDUHAL_LOG_LEVEL_DEBUG
     printBeforeSetupInfo();

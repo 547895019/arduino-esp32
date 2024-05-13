@@ -40,7 +40,7 @@ typedef enum {
 #if SOC_LEDC_SUPPORTED
 	ESP32_BUS_TYPE_LEDC, 		// IO is used as LEDC output
 #endif
-#if SOC_RMT_SUPPORTED
+#if CONFIG_ARDUINO_RMT_SUPPORTED
 	ESP32_BUS_TYPE_RMT_TX, 		// IO is used as RMT output
 	ESP32_BUS_TYPE_RMT_RX, 		// IO is used as RMT input
 #endif

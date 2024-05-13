@@ -43,6 +43,9 @@ __attribute__((weak)) bool shouldPrintChipDebugReport(void) {
     return false;
 }
 
+__attribute__((weak)) void setup(void){}
+__attribute__((weak)) void loop(void){delay(1000);}
+
 void loopTask(void *pvParameters)
 {
 #if !defined(NO_GLOBAL_INSTANCES) && !defined(NO_GLOBAL_SERIAL)

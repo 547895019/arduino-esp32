@@ -14,7 +14,7 @@
 
 #include "soc/soc_caps.h"
 
-#if SOC_RMT_SUPPORTED
+#if CONFIG_ARDUINO_RMT_SUPPORTED
 #include "esp32-hal.h"
 #include "driver/gpio.h"
 #include "driver/rmt_tx.h"
@@ -621,4 +621,4 @@ Err:
   return false;
 }
 
-#endif /* SOC_RMT_SUPPORTED */
+#endif /* CONFIG_ARDUINO_RMT_SUPPORTED */

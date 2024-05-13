@@ -252,6 +252,10 @@ config AUTOCONNECT_WIFI
         If enabled, WiFi will connect to the last used SSID (if station was enabled),
         else connection will be started only after calling WiFi.begin(ssid, password)
 
+config ARDUINO_RMT_SUPPORTED
+    bool "RMT driver supported"
+    default n
+	
 config ARDUINO_SELECTIVE_COMPILATION
     bool "Include only specific Arduino libraries"
     default n

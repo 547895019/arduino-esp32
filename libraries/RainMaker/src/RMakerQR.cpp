@@ -10,14 +10,18 @@ void printQR(const char *name, const char *pop, const char *transport)
     snprintf(payload, sizeof(payload), "{\"ver\":\"%s\",\"name\":\"%s\"" \
                     ",\"pop\":\"%s\",\"transport\":\"%s\"}",
                     PROV_QR_VERSION, name, pop, transport);
+#if defined(Serial)
     if(Serial){
         Serial.printf("Scan this QR code from the ESP RainMaker phone app.\n");
     }
+#endif
     //qrcode_display(payload);  // deprecated!
     esp_qrcode_config_t cfg = ESP_QRCODE_CONFIG_DEFAULT();
     esp_qrcode_generate(&cfg, payload);
+#if defined(Serial)
     if(Serial){
         Serial.printf("If QR code is not visible, copy paste the below URL in a browser.\n%s?data=%s\n", QRCODE_BASE_URL, payload);
     }
+#endif
 }
 #endif

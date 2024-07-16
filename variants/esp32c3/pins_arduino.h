@@ -13,6 +13,8 @@ static const uint8_t LED_BUILTIN = SOC_GPIO_PIN_COUNT+PIN_NEOPIXEL;
 #define RGB_BUILTIN LED_BUILTIN
 #define RGB_BRIGHTNESS 64
 
+#define NO_GLOBAL_SERIAL
+
 static const uint8_t TX = 21;
 static const uint8_t RX = 20;
 

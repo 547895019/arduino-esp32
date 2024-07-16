@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define NO_GLOBAL_SERIAL
+
 static const uint8_t TX = 1;
 static const uint8_t RX = 3;
 

@@ -16,7 +16,7 @@
 #define MAIN_ESP32_HAL_RMT_H_
 
 #include "soc/soc_caps.h"
-#if SOC_RMT_SUPPORTED
+#if CONFIG_ARDUINO_RMT_SUPPORTED
 
 #ifdef __cplusplus
 extern "C" {
@@ -232,5 +232,5 @@ bool rmtDeinit(int pin);
 }
 #endif
 
-#endif /* SOC_RMT_SUPPORTED */
+#endif /* CONFIG_ARDUINO_RMT_SUPPORTED */
 #endif /* MAIN_ESP32_HAL_RMT_H_ */

@@ -316,7 +316,11 @@ esp_err_t i2cSlaveInit(uint8_t num, int sda, int scl, uint16_t slaveID, uint32_t
   }
 
   i2c_ll_slave_init(i2c->dev);
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0)
+  i2c_ll_slave_set_fifo_mode(i2c->dev, true);
+#else
   i2c_ll_set_fifo_mode(i2c->dev, true);
+#endif
   i2c_ll_set_slave_addr(i2c->dev, slaveID, false);
   i2c_ll_set_tout(i2c->dev, I2C_LL_MAX_TIMEOUT);
   i2c_slave_set_frequency(i2c, frequency);
@@ -337,7 +341,11 @@ esp_err_t i2cSlaveInit(uint8_t num, int sda, int scl, uint16_t slaveID, uint32_t
 
   i2c_ll_disable_intr_mask(i2c->dev, I2C_LL_INTR_MASK);
   i2c_ll_clear_intr_mask(i2c->dev, I2C_LL_INTR_MASK);
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0)
+  i2c_ll_slave_set_fifo_mode(i2c->dev, true);
+#else
   i2c_ll_set_fifo_mode(i2c->dev, true);
+#endif
 
   if (!i2c->intr_handle) {
     uint32_t flags = ESP_INTR_FLAG_LOWMED | ESP_INTR_FLAG_SHARED;
@@ -515,16 +523,32 @@ static bool i2c_slave_set_frequency(i2c_slave_struct_t *i2c, uint32_t clk_speed)
 
   i2c_hal_clk_config_t clk_cal;
 #if SOC_I2C_SUPPORT_APB
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0)
+  i2c_ll_master_cal_bus_clk(APB_CLK_FREQ, clk_speed, &clk_cal);
+  i2c_ll_set_source_clk(i2c->dev, SOC_MOD_CLK_APB); /*!< I2C source clock from APB, 80M*/
+#else
   i2c_ll_cal_bus_clk(APB_CLK_FREQ, clk_speed, &clk_cal);
   i2c_ll_set_source_clk(i2c->dev, SOC_MOD_CLK_APB); /*!< I2C source clock from APB, 80M*/
+#endif
+  
 #elif SOC_I2C_SUPPORT_XTAL
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0)
+  i2c_ll_master_cal_bus_clk(XTAL_CLK_FREQ, clk_speed, &clk_cal);
+  i2c_ll_set_source_clk(i2c->dev, SOC_MOD_CLK_XTAL); /*!< I2C source clock from XTAL, 40M */
+#else
   i2c_ll_cal_bus_clk(XTAL_CLK_FREQ, clk_speed, &clk_cal);
   i2c_ll_set_source_clk(i2c->dev, SOC_MOD_CLK_XTAL); /*!< I2C source clock from XTAL, 40M */
 #endif
+#endif
   i2c_ll_set_txfifo_empty_thr(i2c->dev, a);
   i2c_ll_set_rxfifo_full_thr(i2c->dev, SOC_I2C_FIFO_LEN - a);
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0)
+  i2c_ll_master_set_bus_timing(i2c->dev, &clk_cal);
+  i2c_ll_master_set_filter(i2c->dev, 3);
+#else
   i2c_ll_set_bus_timing(i2c->dev, &clk_cal);
   i2c_ll_set_filter(i2c->dev, 3);
+#endif
   return true;
 }
 

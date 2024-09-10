@@ -6,7 +6,7 @@
 #   idf.py build
 
 set(min_supported_idf_version "5.1.0")
-set(max_supported_idf_version "5.1.99")
+set(max_supported_idf_version "5.2.2")
 set(idf_version "${IDF_VERSION_MAJOR}.${IDF_VERSION_MINOR}.${IDF_VERSION_PATCH}")
 
 if ("${idf_version}" AND NOT "$ENV{ARDUINO_SKIP_IDF_VERSION_CHECK}")
@@ -304,6 +304,9 @@ if(NOT CONFIG_ARDUINO_SELECTIVE_COMPILATION OR CONFIG_ARDUINO_SELECTIVE_OpenThre
   endif()
 endif()
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNO_GLOBAL_SERIAL")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNO_GLOBAL_SERIAL")
+
 idf_component_register(INCLUDE_DIRS ${includedirs} PRIV_INCLUDE_DIRS ${priv_includes} SRCS ${srcs} REQUIRES ${requires} PRIV_REQUIRES ${priv_requires})
 
 if(NOT CONFIG_FREERTOS_HZ EQUAL 1000 AND NOT "$ENV{ARDUINO_SKIP_TICK_CHECK}")
@@ -349,3 +352,6 @@ endif()
 if(NOT CONFIG_ARDUINO_SELECTIVE_COMPILATION OR CONFIG_ARDUINO_SELECTIVE_ArduinoOTA)
     maybe_add_component(esp_https_ota)
 endif()
+
+idf_build_set_property(CXX_COMPILE_OPTIONS "-std=gnu++17;-Os;-DCHIP_HAVE_CONFIG_H;-Wno-overloaded-virtual" APPEND)
+idf_build_set_property(C_COMPILE_OPTIONS "-Os" APPEND)

@@ -669,9 +669,15 @@ wifi_power_t WiFiGenericClass::getTxPower() {
  * @return true on success
  */
 bool WiFiGenericClass::initiateFTM(uint8_t frm_count, uint16_t burst_period, uint8_t channel, const uint8_t *mac) {
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0)
+  wifi_ftm_initiator_cfg_t ftmi_cfg = {
+    .resp_mac = {0, 0, 0, 0, 0, 0}, .channel = channel, .frm_count = frm_count, .burst_period = burst_period
+  };
+#else
   wifi_ftm_initiator_cfg_t ftmi_cfg = {
     .resp_mac = {0, 0, 0, 0, 0, 0}, .channel = channel, .frm_count = frm_count, .burst_period = burst_period, .use_get_report_api = true
   };
+#endif
   if (mac != NULL) {
     memcpy(ftmi_cfg.resp_mac, mac, 6);
   }

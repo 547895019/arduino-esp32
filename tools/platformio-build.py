@@ -165,15 +165,6 @@ SConscript(
 )
 
 #
-# Additional flags specific to Arduino core (not based on IDF)
-#
-
-env.Append(
-    CFLAGS=["-Werror=return-type"],
-    CXXFLAGS=["-Werror=return-type"],
-)
-
-#
 # Target: Build Core Library
 #
 

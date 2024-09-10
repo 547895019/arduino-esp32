@@ -369,9 +369,7 @@ int NetworkClient::read() {
   return data;
 }
 
-void NetworkClient::flush() {
-  clear();
-}
+void NetworkClient::flush() {}
 
 size_t NetworkClient::write(const uint8_t *buf, size_t size) {
   int res = 0;

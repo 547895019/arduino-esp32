@@ -49,8 +49,6 @@ dependencies:
     require: public
   espressif/esp_modem:
     version: "^1.1.0"
-  espressif/network_provisioning:
-    version: "~1.0.0"
   espressif/esp-zboss-lib:
     version: "^1.0.1"
     rules:
@@ -96,4 +94,3 @@ dependencies:
     require: public
 examples:
   - path: ./idf_component_examples/hello_world
-  - path: ./idf_component_examples/hw_cdc_hello_world

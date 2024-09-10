@@ -14,10 +14,10 @@ Example
 
 To get started with RMT, you can try:
 
-RMT Write RGB LED
-*****************
+RMT Write Neo Pixel
+*******************
 
-.. literalinclude:: ../../../libraries/ESP32/examples/RMT/RMTWrite_RGB_LED/RMTWrite_RGB_LED.ino
+.. literalinclude:: ../../../libraries/ESP32/examples/RMT/RMTWriteNeoPixel/RMTWriteNeoPixel.ino
     :language: arduino
 
 

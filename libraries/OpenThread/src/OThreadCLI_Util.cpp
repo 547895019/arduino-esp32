@@ -117,7 +117,7 @@ bool otExecCommand(const char *cmd, const char *arg, ot_cmd_return_t *returnCode
           i--;  // search for ' ' before ":'
         }
         if (*i == ' ') {
-          i++;  // move it forward to the number beginning
+          i++;  // move it forward to the number begining
           returnCode->errorCode = atoi(i);
           returnCode->errorMessage = m;
         }  // otherwise, it will keep the "bad error message" information

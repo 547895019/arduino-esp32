@@ -33,9 +33,15 @@ class LittleFSImpl : public VFSImpl {
 public:
   LittleFSImpl();
   virtual ~LittleFSImpl() {}
+  virtual bool exists(const char *path);
 };
 
 LittleFSImpl::LittleFSImpl() {}
+
+bool LittleFSImpl::exists(const char *path) {
+  File f = open(path, "r", false);
+  return (f == true);
+}
 
 LittleFSFS::LittleFSFS() : FS(FSImplPtr(new LittleFSImpl())), partitionLabel_(NULL) {}
 

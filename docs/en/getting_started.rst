@@ -64,14 +64,14 @@ Supported Operating Systems
 ---------------------------
 
 +-------------------+-------------------+-------------------+
-| |windows-logo|    | |linux-logo|      | |macOS-logo|      |
+| |windows-logo|    | |linux-logo|      | |macos-logo|      |
 +-------------------+-------------------+-------------------+
 | Windows           | Linux             | macOS             |
 +-------------------+-------------------+-------------------+
 
 .. |windows-logo| image:: ../_static/logo_windows.png
 .. |linux-logo| image:: ../_static/logo_linux.png
-.. |macOS-logo| image:: ../_static/logo_macos.png
+.. |macos-logo| image:: ../_static/logo_macos.png
 
 Supported IDEs
 ---------------------------

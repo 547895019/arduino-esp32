@@ -288,9 +288,7 @@ size_t NetworkUDP::write(const uint8_t *buffer, size_t size) {
   return i;
 }
 
-void NetworkUDP::flush() {
-  clear();
-}
+void NetworkUDP::flush() {}
 
 int NetworkUDP::parsePacket() {
   if (rx_buffer) {

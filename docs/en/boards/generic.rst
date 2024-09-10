@@ -12,9 +12,6 @@ Header Block
 
 Header1
 ^^^^^^^
-
-.. vale off
-
 ===  ====  =====  ===================================
 No.  Name  Type   Function
 ===  ====  =====  ===================================
@@ -23,8 +20,6 @@ No.  Name  Type   Function
 3    5V0   P      5 V power supply
 4    GND   G      Ground
 ===  ====  =====  ===================================
-
-.. vale on
 
 Pin Layout
 ----------

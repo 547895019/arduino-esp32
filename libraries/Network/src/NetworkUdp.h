@@ -64,7 +64,6 @@ public:
   int endPacket();
   size_t write(uint8_t);
   size_t write(const uint8_t *buffer, size_t size);
-  [[deprecated("Use clear() instead.")]]
   void flush();  // Print::flush tx
   int parsePacket();
   int available();

@@ -18,15 +18,14 @@
 //
 // Please use the following Arduino IDE configuration
 //
-// * Board: "ESP32 Dev Module" or other board with ESP32
-// * Partition Scheme: "Default 4MB with spiffs" or any other scheme with spiffs or FAT
+// * Board: ESP32 Dev Module
+// * Partition Scheme: Default 4MB with spiffs (1.2MB APP/1.5MB SPIFFS)
 //     but LittleFS will be used in the partition (not SPIFFS)
 // * other setting as applicable
 //
 // Changelog:
 // 21.07.2021 creation, first version
 // 08.01.2023 ESP32 version with ETag
-// 02.08.2024 support LitteFS and FAT file systems (on large Flash chips)
 
 #include <Arduino.h>
 #include <WebServer.h>
@@ -34,11 +33,8 @@
 
 #include "secrets.h"  // add WLAN Credentials in here.
 
-#include "esp_partition.h"  // to check existing data partitions in Flash memory
-
 #include <FS.h>        // File System for Web Server Files
-#include <LittleFS.h>  // Use LittleFSThis file system is used.
-#include <FFat.h>      // or.. FAT
+#include <LittleFS.h>  // This file system is used.
 
 // mark parameters not used in example
 #define UNUSED __attribute__((unused))
@@ -55,9 +51,6 @@
 // need a WebServer for http access on port 80.
 WebServer server(80);
 
-// The file system in use...
-fs::FS *fsys = nullptr;
-
 // The text of builtin files are in this header file
 #include "builtinfiles.h"
 
@@ -72,7 +65,7 @@ void handleRedirect() {
   TRACE("Redirect...\n");
   String url = "/index.htm";
 
-  if (!fsys->exists(url)) {
+  if (!LittleFS.exists(url)) {
     url = "/$upload.htm";
   }
 
@@ -83,7 +76,7 @@ void handleRedirect() {
 // This function is called when the WebServer was requested to list all existing files in the filesystem.
 // a JSON array with file information is returned.
 void handleListFiles() {
-  File dir = fsys->open("/", "r");
+  File dir = LittleFS.open("/", "r");
   String result;
 
   result += "[\n";
@@ -114,15 +107,8 @@ void handleSysInfo() {
   result += "  \"Chip Revision\": " + String(ESP.getChipRevision()) + ",\n";
   result += "  \"flashSize\": " + String(ESP.getFlashChipSize()) + ",\n";
   result += "  \"freeHeap\": " + String(ESP.getFreeHeap()) + ",\n";
-
-  if (fsys == (fs::FS *)&FFat) {
-    result += "  \"fsTotalBytes\": " + String(FFat.totalBytes()) + ",\n";
-    result += "  \"fsUsedBytes\": " + String(FFat.usedBytes()) + ",\n";
-  } else {
-    result += "  \"fsTotalBytes\": " + String(LittleFS.totalBytes()) + ",\n";
-    result += "  \"fsUsedBytes\": " + String(LittleFS.usedBytes()) + ",\n";
-  }
-
+  result += "  \"fsTotalBytes\": " + String(LittleFS.totalBytes()) + ",\n";
+  result += "  \"fsUsedBytes\": " + String(LittleFS.usedBytes()) + ",\n";
   result += "}";
 
   server.sendHeader("Cache-Control", "no-cache");
@@ -146,11 +132,11 @@ public:
   // @param requestMethod method of the http request line.
   // @param requestUri request resource from the http request line.
   // @return true when method can be handled.
-  bool canHandle(WebServer &server, HTTPMethod requestMethod, String uri) override {
+  bool canHandle(HTTPMethod requestMethod, String UNUSED uri) override {
     return ((requestMethod == HTTP_POST) || (requestMethod == HTTP_DELETE));
   }  // canHandle()
 
-  bool canUpload(WebServer &server, String uri) override {
+  bool canUpload(String uri) override {
     // only allow upload on root fs level.
     return (uri == "/");
   }  // canUpload()
@@ -162,13 +148,15 @@ public:
       fName = "/" + fName;
     }
 
+    TRACE("handle %s\n", fName.c_str());
+
     if (requestMethod == HTTP_POST) {
       // all done in upload. no other forms.
 
     } else if (requestMethod == HTTP_DELETE) {
-      if (fsys->exists(fName)) {
+      if (LittleFS.exists(fName)) {
         TRACE("DELETE %s\n", fName.c_str());
-        fsys->remove(fName);
+        LittleFS.remove(fName);
       }
     }  // if
 
@@ -177,7 +165,7 @@ public:
   }  // handle()
 
   // uploading process
-  void upload(WebServer UNUSED &server, String requestUri, HTTPUpload &upload) override {
+  void upload(WebServer UNUSED &server, String UNUSED _requestUri, HTTPUpload &upload) override {
     // ensure that filename starts with '/'
     static size_t uploadSize;
 
@@ -190,10 +178,10 @@ public:
       }
       TRACE("start uploading file %s...\n", fName.c_str());
 
-      if (fsys->exists(fName)) {
-        fsys->remove(fName);
+      if (LittleFS.exists(fName)) {
+        LittleFS.remove(fName);
       }  // if
-      _fsUploadFile = fsys->open(fName, "w");
+      _fsUploadFile = LittleFS.open(fName, "w");
       uploadSize = 0;
 
     } else if (upload.status == UPLOAD_FILE_WRITE) {
@@ -210,7 +198,7 @@ public:
           if (!fName.startsWith("/")) {
             fName = "/" + fName;
           }
-          fsys->remove(fName);
+          LittleFS.remove(fName);
         }
         uploadSize += upload.currentSize;
         // TRACE("free:: %d of %d\n", LittleFS.usedBytes(), LittleFS.totalBytes());
@@ -219,7 +207,7 @@ public:
       }  // if
 
     } else if (upload.status == UPLOAD_FILE_END) {
-      TRACE("upload done.\n");
+      TRACE("finished.\n");
       // Close the file
       if (_fsUploadFile) {
         _fsUploadFile.close();
@@ -243,49 +231,14 @@ void setup(void) {
 
   TRACE("Starting WebServer example...\n");
 
-  // ----- check partitions for finding the filesystem type -----
-  esp_partition_iterator_t i;
-
-  i = esp_partition_find(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_DATA_FAT, nullptr);
-  if (i) {
-    TRACE("FAT partition found.");
-    fsys = &FFat;
-
-  } else {
-    i = esp_partition_find(ESP_PARTITION_TYPE_DATA, ESP_PARTITION_SUBTYPE_DATA_SPIFFS, nullptr);
-    if (i) {
-      TRACE("SPIFFS partition found.");
-      fsys = &LittleFS;
-
-    } else {
-      TRACE("no partition found.");
-    }
-  }
-  esp_partition_iterator_release(i);
-
-  // mount and format as needed
   TRACE("Mounting the filesystem...\n");
-  if (!fsys) {
-    TRACE("need to change the board configuration to include a partition for files.\n");
-    delay(30000);
-
-  } else if ((fsys == (fs::FS *)&FFat) && (!FFat.begin())) {
+  if (!LittleFS.begin()) {
     TRACE("could not mount the filesystem...\n");
     delay(2000);
-    TRACE("formatting FAT...\n");
-    FFat.format();
-    delay(2000);
-    TRACE("restarting...\n");
-    delay(2000);
-    ESP.restart();
-
-  } else if ((fsys == (fs::FS *)&LittleFS) && (!LittleFS.begin())) {
-    TRACE("could not mount the filesystem...\n");
-    delay(2000);
-    TRACE("formatting LittleFS...\n");
+    TRACE("formatting...\n");
     LittleFS.format();
     delay(2000);
-    TRACE("restarting...\n");
+    TRACE("restart.\n");
     delay(2000);
     ESP.restart();
   }
@@ -333,7 +286,7 @@ void setup(void) {
   // UPLOAD and DELETE of files in the file system using a request handler.
   server.addHandler(new FileServerHandler());
 
-  // enable CORS header in webserver results
+  // // enable CORS header in webserver results
   server.enableCORS(true);
 
   // enable ETAG header in webserver results (used by serveStatic handler)
@@ -353,7 +306,7 @@ void setup(void) {
 #endif
 
   // serve all static files
-  server.serveStatic("/", *fsys, "/");
+  server.serveStatic("/", LittleFS, "/");
 
   TRACE("Register default (not found) answer...\n");
 

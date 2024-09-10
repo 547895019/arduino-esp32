@@ -77,7 +77,6 @@ int16_t
   scanDelete();
 
   wifi_scan_config_t config;
-  memset(&config, 0, sizeof(wifi_scan_config_t));
   config.ssid = (uint8_t *)ssid;
   config.bssid = (uint8_t *)bssid;
   config.channel = channel;

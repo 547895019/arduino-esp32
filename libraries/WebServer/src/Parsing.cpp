@@ -262,7 +262,7 @@ bool WebServer::_parseRequest(NetworkClient &client) {
     }
     _parseArguments(searchStr);
   }
-  client.clear();
+  client.flush();
 
   log_v("Request: %s", url.c_str());
   log_v(" Arguments: %s", searchStr.c_str());

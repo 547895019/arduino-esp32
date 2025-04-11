@@ -44,8 +44,6 @@ __attribute__((weak)) bool shouldPrintChipDebugReport(void) {
   return false;
 }
 
-__attribute__((weak)) void setup(void){}
-__attribute__((weak)) void loop(void){delay(1000);}
 void loopTask(void *pvParameters) {
 #if !defined(NO_GLOBAL_INSTANCES) && !defined(NO_GLOBAL_SERIAL)
   // sets UART0 (default console) RX/TX pins as already configured in boot or as defined in variants/pins_arduino.h
@@ -73,20 +71,14 @@ void loopTask(void *pvParameters) {
     if (loopTaskWDTEnabled) {
       esp_task_wdt_reset();
     }
-	uint64_t lastYield = millis();
     loop();
-	uint64_t now = millis();
-	if((now - lastYield) < 1) {
-		vTaskDelay(5); //delay 1 RTOS tick
-	}
     if (serialEventRun) {
       serialEventRun();
     }
   }
 }
 
-extern "C" void arduino_startup() {
-#if 0
+extern "C" void app_main() {
 #ifdef F_XTAL_MHZ
 #if !CONFIG_IDF_TARGET_ESP32S2  // ESP32-S2 does not support rtc_clk_xtal_freq_update
   rtc_clk_xtal_freq_update((rtc_xtal_freq_t)F_XTAL_MHZ);
@@ -95,7 +87,6 @@ extern "C" void arduino_startup() {
 #endif
 #ifdef F_CPU
   setCpuFrequencyMhz(F_CPU / 1000000);
-#endif
 #endif
 #if ARDUINO_USB_CDC_ON_BOOT && !ARDUINO_USB_MODE
   Serial.begin();

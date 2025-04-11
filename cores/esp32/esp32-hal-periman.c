@@ -44,7 +44,7 @@ const char *perimanGetTypeName(peripheral_bus_type_t type) {
 #if SOC_LEDC_SUPPORTED
     case ESP32_BUS_TYPE_LEDC: return "LEDC";
 #endif
-#if CONFIG_ARDUINO_RMT_SUPPORTED
+#if SOC_RMT_SUPPORTED
     case ESP32_BUS_TYPE_RMT_TX: return "RMT_TX";
     case ESP32_BUS_TYPE_RMT_RX: return "RMT_RX";
 #endif

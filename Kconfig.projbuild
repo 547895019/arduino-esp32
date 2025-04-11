@@ -252,9 +252,6 @@ config AUTOCONNECT_WIFI
         If enabled, WiFi will connect to the last used SSID (if station was enabled),
         else connection will be started only after calling WiFi.begin(ssid, password)
 
-config ARDUINO_RMT_SUPPORTED
-    bool "RMT driver supported"
-    default n
 config ARDUINO_SELECTIVE_COMPILATION
     bool "Include only specific Arduino libraries"
     default n
@@ -266,6 +263,11 @@ config ARDUINO_SELECTIVE_SPI
 
 config ARDUINO_SELECTIVE_Wire
     bool "Enable Wire"
+    depends on ARDUINO_SELECTIVE_COMPILATION
+    default y
+
+config ARDUINO_SELECTIVE_ESP_SR
+    bool "Enable ESP-SR"
     depends on ARDUINO_SELECTIVE_COMPILATION
     default y
 
@@ -286,6 +288,11 @@ config ARDUINO_SELECTIVE_Ticker
 
 config ARDUINO_SELECTIVE_Update
     bool "Enable Update"
+    depends on ARDUINO_SELECTIVE_COMPILATION
+    default y
+
+config ARDUINO_SELECTIVE_Zigbee
+    bool "Enable Zigbee"
     depends on ARDUINO_SELECTIVE_COMPILATION
     default y
 
@@ -361,6 +368,11 @@ config ARDUINO_SELECTIVE_HTTPClient
     select ARDUINO_SELECTIVE_NetworkClientSecure
     default y
 
+config ARDUINO_SELECTIVE_Matter
+    bool "Enable Matter"
+    depends on ARDUINO_SELECTIVE_COMPILATION && ARDUINO_SELECTIVE_Network
+    default y
+
 config ARDUINO_SELECTIVE_NetBIOS
     bool "Enable NetBIOS"
     depends on ARDUINO_SELECTIVE_COMPILATION && ARDUINO_SELECTIVE_Network
@@ -399,6 +411,21 @@ config ARDUINO_SELECTIVE_BluetoothSerial
 
 config ARDUINO_SELECTIVE_SimpleBLE
     bool "Enable SimpleBLE"
+    depends on ARDUINO_SELECTIVE_COMPILATION
+    default y
+
+config ARDUINO_SELECTIVE_RainMaker
+    bool "Enable RainMaker"
+    depends on ARDUINO_SELECTIVE_COMPILATION
+    default y
+
+config ARDUINO_SELECTIVE_OpenThread
+    bool "Enable OpenThread"
+    depends on ARDUINO_SELECTIVE_COMPILATION
+    default y
+
+config ARDUINO_SELECTIVE_Insights
+    bool "Enable Insights"
     depends on ARDUINO_SELECTIVE_COMPILATION
     default y
 

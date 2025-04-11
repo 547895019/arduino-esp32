@@ -62,7 +62,11 @@ public:
   );
   void endProvision();
   bool disableAutoStop(uint32_t cleanup_delay);
+#if defined(Serial)
   void printQR(const char *name, const char *pop, const char *transport, Print &out = Serial);
+#else
+  void printQR(const char *name, const char *pop, const char *transport, Print &out);
+#endif
 };
 
 extern WiFiProvClass WiFiProv;

@@ -27,7 +27,7 @@ void rgbLedWrite(uint8_t pin, uint8_t red_val, uint8_t green_val, uint8_t blue_v
 }
 
 void rgbLedWriteOrdered(uint8_t pin, rgb_led_color_order_t order, uint8_t red_val, uint8_t green_val, uint8_t blue_val) {
-#if SOC_RMT_SUPPORTED
+#if CONFIG_ARDUINO_RMT_SUPPORTED
   rmt_data_t led_data[24];
 
   // Verify if the pin used is RGB_BUILTIN and fix GPIO number
@@ -94,5 +94,5 @@ void rgbLedWriteOrdered(uint8_t pin, rgb_led_color_order_t order, uint8_t red_va
   rmtWrite(pin, led_data, RMT_SYMBOLS_OF(led_data), RMT_WAIT_FOR_EVER);
 #else
   log_e("RMT is not supported on " CONFIG_IDF_TARGET);
-#endif /* SOC_RMT_SUPPORTED */
+#endif /* CONFIG_ARDUINO_RMT_SUPPORTED */
 }

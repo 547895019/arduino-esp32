@@ -207,7 +207,7 @@ void ledc_test(void) {
 
 void rmt_test(void) {
   setup_test("RMT");
-#if SOC_RMT_SUPPORTED
+#if CONFIG_ARDUINO_RMT_SUPPORTED
   test_executed = true;
   if (!rmtInit(uart1_rx_pin, RMT_TX_MODE, RMT_MEM_NUM_BLOCKS_1, 10000000)) {
     Serial.println("RMT init failed");

@@ -370,6 +370,9 @@ if(IDF_TARGET STREQUAL "esp32p4")
   list(APPEND requires esp_driver_touch_sens)
 endif()
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DNO_GLOBAL_SERIAL")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNO_GLOBAL_SERIAL")
+
 idf_component_register(INCLUDE_DIRS ${includedirs} PRIV_INCLUDE_DIRS ${priv_includes} SRCS ${srcs} REQUIRES ${requires} PRIV_REQUIRES ${priv_requires})
 
 if(NOT CONFIG_FREERTOS_HZ EQUAL 1000 AND NOT "$ENV{ARDUINO_SKIP_TICK_CHECK}")
@@ -427,3 +430,5 @@ endif()
 if(NOT CONFIG_ARDUINO_SELECTIVE_COMPILATION OR CONFIG_ARDUINO_SELECTIVE_WiFiProv)
     maybe_add_component(espressif__network_provisioning)
 endif()
+idf_build_set_property(CXX_COMPILE_OPTIONS "-std=gnu++17;-Os;-DCHIP_HAVE_CONFIG_H;-Wno-overloaded-virtual" APPEND)
+idf_build_set_property(C_COMPILE_OPTIONS "-Os" APPEND)

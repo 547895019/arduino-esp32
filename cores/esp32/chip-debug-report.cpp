@@ -19,10 +19,6 @@
 
 #define chip_report_printf log_printf
 
-#if ESP_IDF_VERSION <= ESP_IDF_VERSION_VAL(5, 1, 2)
-#define ESP_PARTITION_SUBTYPE_DATA_LITTLEFS   0x83
-#endif
-
 #define printMemCapsInfo(caps) _printMemCapsInfo(MALLOC_CAP_##caps, #caps)
 #define b2kb(b)                ((float)b / 1024.0)
 #define b2mb(b)                ((float)b / (1024.0 * 1024.0))
@@ -200,7 +196,9 @@ static void printPartitionsInfo(void) {
             case ESP_PARTITION_SUBTYPE_DATA_ESPHTTPD:  chip_report_printf("ESPHTTPD"); break;
             case ESP_PARTITION_SUBTYPE_DATA_FAT:       chip_report_printf("FAT"); break;
             case ESP_PARTITION_SUBTYPE_DATA_SPIFFS:    chip_report_printf("SPIFFS"); break;
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0)
             case ESP_PARTITION_SUBTYPE_DATA_LITTLEFS:  chip_report_printf("LITTLEFS"); break;
+#endif
             default:                                   chip_report_printf("0x%02X", partition->subtype); break;
           }
         }

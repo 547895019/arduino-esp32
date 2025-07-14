@@ -19,6 +19,10 @@
 
 #define chip_report_printf log_printf
 
+#if ESP_IDF_VERSION <= ESP_IDF_VERSION_VAL(5, 1, 2)
+#define ESP_PARTITION_SUBTYPE_DATA_LITTLEFS   0x83
+#endif
+
 #define printMemCapsInfo(caps) _printMemCapsInfo(MALLOC_CAP_##caps, #caps)
 #define b2kb(b)                ((float)b / 1024.0)
 #define b2mb(b)                ((float)b / (1024.0 * 1024.0))

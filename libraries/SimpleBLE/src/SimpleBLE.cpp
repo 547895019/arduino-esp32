@@ -14,7 +14,7 @@
 
 #include "sdkconfig.h"
 
-#if defined(CONFIG_BT_ENABLED) && defined(CONFIG_BLUEDROID_ENABLED)
+#if SOC_BT_SUPPORTED && defined(CONFIG_BT_ENABLED) && defined(CONFIG_BLUEDROID_ENABLED)
 
 #include "SimpleBLE.h"
 #include "esp32-hal-log.h"

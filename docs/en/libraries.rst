@@ -91,3 +91,38 @@ The Arduino ESP32 offers some unique APIs, described in this section:
     :glob:
 
     api/*
+
+Matter APIs
+-----------
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    matter/matter
+    matter/matter_ep
+    matter/ep_*
+
+OpenThread APIs
+---------------
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    openthread/openthread
+    openthread/openthread_cli
+    openthread/openthread_core
+    openthread/openthread_dataset
+
+Zigbee APIs
+-----------
+
+.. toctree::
+    :maxdepth: 1
+    :glob:
+
+    zigbee/zigbee
+    zigbee/zigbee_core
+    zigbee/zigbee_ep
+    zigbee/ep_*
